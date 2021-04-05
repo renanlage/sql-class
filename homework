@@ -1,0 +1,23 @@
+Você criou um site para avaliar filmes e vem coletando dados sobre reviews de filmes. Ainda não há muitos dados, mas já é possível testar queries interessantes. O schema do banco é:
+
+Movie ( mID, title, year, director )
+Existe um filme com um identificador `mID`, um título `title`, um ano de lançamento `year` e um diretor `director`.
+
+Reviewer ( rID, name )
+Existe um revisor com identificador `rID` e nome `name`.
+
+Rating ( rID, mID, stars, ratingDate )
+O revisor fez uma avaliação com identificador `rID` deu ao filme `mID` uma quantidade de estrelas `stars` variando de 1 à 5 numa certa data `ratingDate`.
+
+Uma imagem do banco de dados pode ser vista aqui: https://courses.edx.org/asset-v1:StanfordOnline+SOE.YDB-SQL0001+2T2020+type@asset+block/moviedata.html
+
+O banco deve ser populado rodando o arquivo `movie_ratings_db.sql`.
+
+1) Descubra os títulos de todos os filmes dirigidos por Steven Spielberg.
+2) Descubra todos os anos em que um filme recebeu uma avaliação de 4 ou 5 estrelas e ordene em ordem crescente.
+3) Encontre os títulos de todos os filmes que não tem avaliação ainda.
+4) Alguns revisores não forneceram uma data para sua avaliação. Encontre o nome de todos os revisores que tem avaliações com valor NULL na data.
+5) Faça uma query para retornar as avaliações num formato mais legível: nome do revisor, título do filme, estrelas e data da revisão. Também ordene os dados, primeiro por nome do revisor, depois por título do filme, e por último por número de estrelas.
+6) Para todos os casos em que um mesmo revisor avaliou o mesmo filme duas vezes e deu uma nota maior na segunda vez, retorne o nome do revisor e o título do filme.
+7) Para cada filme que tem ao menos uma avaliação, ache a maior quantidade de estrelas que aquele filme recebeu. Retorne o título do filme e a quantidade de estrelas. Ordene pelo título.
+8) Ache a diferença entre a média das avaliações de filmes lançados antes de 1980 e a média das avaliações dos filmes lançados depois de 1980.
