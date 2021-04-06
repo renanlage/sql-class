@@ -21,3 +21,68 @@ O banco deve ser populado rodando o arquivo `movie_ratings_db.sql`.
 6) Para todos os casos em que um mesmo revisor avaliou o mesmo filme duas vezes e deu uma nota maior na segunda vez, retorne o nome do revisor e o título do filme.
 7) Para cada filme que tem ao menos uma avaliação, ache a maior quantidade de estrelas que aquele filme recebeu. Retorne o título do filme e a quantidade de estrelas. Ordene pelo título.
 8) Ache a diferença entre a média das avaliações de filmes lançados antes de 1980 e a média das avaliações dos filmes lançados depois de 1980.
+
+```sql
+-- 1) Descubra os títulos de todos os filmes dirigidos por Steven Spielberg.
+select title from movie where director='Steven Spielberg';
+
+-- 2) Descubra todos os anos em que um filme recebeu uma avaliação de 4 ou 5 estrelas e ordene em ordem crescente.
+select distinct year from movie
+join rating using(mID)
+where stars >= 4
+order by year;
+
+-- 3) Encontre os títulos de todos os filmes que não tem avaliação ainda.
+-- Left join com valores nulo na segunda tabela
+select title
+from movie
+left outer join rating on rating.mID = movie.mID
+where rating.mID is null;
+
+-- Subquery no where com not in
+SELECT title FROM Movie WHERE Movie.mID NOT IN (SELECT mID from Rating);
+
+-- Subquery no where com not exists
+SELECT title FROM Movie WHERE NOT EXISTS (SELECT * from Rating where Rating.mID = Movie.mID);
+
+-- 4) Alguns revisores não forneceram uma data para sua avaliação. Encontre o nome de todos os revisores que tem avaliações com valor NULL na data.
+
+select distinct name
+from rating
+join reviewer on rating.rID = reviewer.rID
+where ratingDate is null;
+
+-- 5) Faça uma query para retornar as avaliações num formato mais legível: nome do revisor, título do filme, estrelas e data da revisão. Também ordene os dados, primeiro por nome do revisor, depois por título do filme, e por último por número de estrelas.
+select reviewer.name, movie.title, rating.stars, rating.ratingDate
+from rating
+join reviewer using (rID)
+join movie on movie.mID = rating.mID
+order by reviewer.name, movie.title, rating.stars;
+
+-- 6) Para todos os casos em que um mesmo revisor avaliou o mesmo filme duas vezes e deu uma nota maior na segunda vez, retorne o nome do revisor e o título do filme.
+select reviewer.name, movie.title
+from rating r1
+join rating r2 on r2.rID = r1.rID and r2.mID = r1.mID and r2.stars > r1.stars and r2.ratingDate > r1.ratingDate
+join reviewer on reviewer.rID = r1.rID
+join movie on movie.mID = r1.mID;
+
+-- 7) Para cada filme que tem ao menos uma avaliação, ache a maior quantidade de estrelas que aquele filme recebeu. Retorne o título do filme e a quantidade de estrelas. Ordene pelo título.
+select movie.title, max(stars)
+from rating
+join movie using (mID)
+group by movie.title
+order by movie.title;
+
+-- 8) Ache a diferença entre a média das avaliações de filmes lançados antes de 1980 e a média das avaliações dos filmes lançados depois de 1980.
+select (
+  select avg(stars)
+  from rating
+  join movie using (mID)
+  where year < 1980
+) - (
+  select avg(stars)
+  from rating
+  join movie using (mID)
+  where year >= 1980
+);
+```
